@@ -49,7 +49,7 @@ const Searchpage = () => {
             {loading ? (
                 <div
                     className="flex items-center justify-center
-                font-bold font-xl text-black z-20"
+                font-bold font-xl text-white z-20"
                 >
                     Please wait...
                 </div>

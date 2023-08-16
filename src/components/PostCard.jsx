@@ -8,14 +8,16 @@ const PostCard = ({ post }) => {
         <div className="px-4 py-3 bg-dark text-white w-full flex flex-col rounded-xl shadow-lg">
             <div className="flex gap-5 flex-1 ">
                 <Link href={`/profile/${_id}`}>
-                    <div className="bg-white px-1 py-1 rounded-full h-fit">
-                        <Image
-                            src={userImage}
-                            height={40}
-                            alt="user image"
-                            width={40}
-                            className="object-contain rounded-full"
-                        />
+                    <div className="flex flex-col h-full items-center">
+                        <div className="bg-white px-1 py-1 rounded-full relative h-10 w-10">
+                            <Image
+                                src={userImage}
+                                alt="user image"
+                                fill
+                                className="object-cover rounded-full"
+                            />
+                        </div>
+                        <p className="h-full w-[1px] opacity-80 bg-white" />
                     </div>
                 </Link>
                 <div className="flex flex-col ">
@@ -26,7 +28,7 @@ const PostCard = ({ post }) => {
                     <div className="py-4">{title}</div>
                     <div className=" h-fit w-full relative rounded-2xl ">
                         <Image
-                            src={image}
+                            src={image || "/error.jpg"}
                             width="0"
                             alt="this is post image"
                             height="0"

@@ -2,8 +2,6 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import User from "./user";
 import Connection from "./connectDb";
-import { redirect } from "next/dist/server/api-utils";
-Connection();
 
 export const authOptions = {
     secret: process.env.NEXTAUTH_SECRET,
@@ -19,7 +17,8 @@ export const authOptions = {
     ],
     callbacks: {
         async signIn({ user, account, email }) {
-            console.log(user, account, email);
+            Connection();
+
             const existingUser = await User.findOne({
                 email: user.email,
             }).lean();
@@ -39,6 +38,8 @@ export const authOptions = {
             }
         },
         async session({ session }) {
+            Connection();
+
             const { user } = session;
             const userData = await User.findOne({
                 email: user.email,

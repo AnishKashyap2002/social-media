@@ -11,11 +11,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-    const [id, setId] = useState("");
-
     const { data: session } = useSession();
-
-    console.log(session);
 
     const router = useRouter();
 
@@ -44,14 +40,13 @@ const Navbar = () => {
                             >
                                 <div
                                     className="px-1 py-1 bg-white
-                            rounded-full"
+                            rounded-full h-10 w-10 relative"
                                 >
                                     <Image
                                         src={session?.user?.image}
-                                        width={40}
                                         alt="Avatar image"
-                                        height={40}
-                                        className="object-contain rounded-full "
+                                        fill
+                                        className="object-cover rounded-full  "
                                     />
                                 </div>
                                 <div className=" flex gap-1 items-center">
@@ -74,7 +69,7 @@ const Navbar = () => {
                                         : "translate-y-[-300px]"
                                 }`}
                             >
-                                <Link href={`/profile/${session.user._id}`}>
+                                <Link href={`/profile/${session?.user._id}`}>
                                     <p
                                         className="flex gap-2 items-center px-2 py-1 rounded-lg
                                     hover:bg-white

@@ -2,6 +2,7 @@ import { BsSearchHeartFill, BsFire } from "react-icons/bs";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { FiSettings } from "react-icons/fi";
 import Link from "next/link";
+import { currentUser } from "@/lib/actions";
 
 const Footer = async ({ position }) => {
     return (

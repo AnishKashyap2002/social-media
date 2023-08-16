@@ -9,11 +9,11 @@ export default function Layout({ children }) {
     return (
         <html lang="en">
             <body>
-                <div className="flex justify-center ">
-                    <div className="max-w-[700px] w-full relative min-h-screen">
+                <div className="flex justify-center bg-background ">
+                    <div className="max-w-[700px] w-full relative min-h-screen mb-20">
                         {children}
-                        <Footer position="fixed" />
                     </div>
+                    <Footer position="fixed" />
                 </div>
             </body>
         </html>

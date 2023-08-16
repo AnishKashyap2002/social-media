@@ -1,11 +1,13 @@
 "use client";
 
 import "@uploadthing/react/styles.css";
+import { toast } from "react-hot-toast";
 
 import { UploadButton } from "@/utils/uploadthing";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { createUserPost } from "@/lib/actions";
 
 export const Postpage = () => {
     const router = useRouter();
@@ -27,18 +29,25 @@ export const Postpage = () => {
             setLoading(true);
             const createPost = async () => {
                 try {
-                    const response = await fetch("/api/create/post/", {
-                        method: "post",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            title: form.title,
-                            imageUrl: form.imageUrl,
-                        }),
-                    }).then(async (result) => {
-                        console.log(await result.json());
-                        alert("post created successfully :)");
+                    // const response = await fetch("/api/create/post/", {
+                    //     method: "post",
+                    //     headers: {
+                    //         "Content-Type": "application/json",
+                    //     },
+                    //     body: JSON.stringify({
+                    //         title: form.title,
+                    //         imageUrl: form.imageUrl,
+                    //     }),
+                    // }).then(async (result) => {
+                    //     console.log(await result.json());
+
+                    // });
+                    const isCreated = await createUserPost(
+                        form.title,
+                        form.imageUrl
+                    );
+                    if (isCreated) {
+                        toast.success("post created successfully :)");
                         setImage({
                             name: "",
                             url: "",
@@ -48,7 +57,9 @@ export const Postpage = () => {
                             imageUrl: "",
                         });
                         router.push("/");
-                    });
+                    } else {
+                        toast.error("Something went wrong !!");
+                    }
                 } catch (error) {
                     console.log("error", error);
                 } finally {
@@ -70,7 +81,7 @@ export const Postpage = () => {
             <form
                 action=""
                 onSubmit={handleSubmit}
-                className=" sm:min-w-[700px] w-full rounded-xl bg-light shadow-lg"
+                className=" sm:min-w-[700px] w-full rounded-xl bg-light shadow-lg bg-opacity-60"
             >
                 <div className="text-2xl font-bold text-center">
                     Upload Post
@@ -108,7 +119,7 @@ export const Postpage = () => {
                                 url: res[0].fileUrl,
                             });
                             setForm({ ...form, imageUrl: res[0].fileUrl });
-                            alert("Upload Completed");
+                            toast.success("Image uploaded");
                         }}
                         onUploadError={(error) => {
                             // Do something with the error.
@@ -117,13 +128,15 @@ export const Postpage = () => {
                     />
 
                     {image?.name && (
-                        <div className="w-full px-2 bg-light rounded-2xl flex  flex-col gap-2 justify-center">
-                            <Image
-                                src={image.url}
-                                height={100}
-                                width={100}
-                                className="object-contain rounded-2xl "
-                            />
+                        <div className="flex flex-col">
+                            <div className="w-fit px-2 bg-light rounded-2xl flex  flex-col gap-2 justify-center">
+                                <Image
+                                    src={image.url}
+                                    height={100}
+                                    width={100}
+                                    className="object-contain rounded-2xl "
+                                />
+                            </div>
                             <p>{image.name}</p>
                         </div>
                     )}

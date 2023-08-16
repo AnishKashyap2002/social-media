@@ -1,5 +1,5 @@
-import Provider from "@/components/Provider";
 import Footer from "@/components/Footer";
+import toast, { Toaster } from "react-hot-toast";
 
 import "@/app/globals.css";
 
@@ -11,12 +11,13 @@ export default function Layout({ children }) {
     return (
         <html lang="en">
             <body>
-                <div className="flex justify-center w-full bg-gradient-to-r from-slate-200 to-slate-400 ">
+                <div className="flex justify-center w-full bg-[url('/form-bg.jpg')] bg-no-repeat bg-cover relative">
                     <div className="max-w-[700px] w-full relative min-h-screen">
                         {children}
-                        <Footer position="absolute" />
                     </div>
+                    <Footer position="absolute" />
                 </div>
+                <Toaster />
             </body>
         </html>
     );

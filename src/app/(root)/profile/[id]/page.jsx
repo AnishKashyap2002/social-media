@@ -1,46 +1,20 @@
-"use client";
 import CustomPostCard from "@/components/CustomPostCard";
 import PostCard from "@/components/PostCard";
+import { getUserPosts } from "@/lib/actions";
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
-const Profilepage = ({ params }) => {
-    const [posts, setPosts] = useState([]);
-    const [user, setUser] = useState(null);
+const Profilepage = async ({ params }) => {
+    // const [posts, setPosts] = useState([]);
+
+    // const [user, setUser] = useState(null);
+
     const { id } = params;
 
-    useEffect(() => {
-        const getPosts = async () => {
-            const response = await fetch("/api/posts/user", {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: id,
-                }),
-            });
-            const newPosts = await response.json();
-            console.log(newPosts);
-            setPosts(newPosts);
-        };
-        const getUser = async () => {
-            const response = await fetch("/api/user", {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: id,
-                }),
-            });
-            const newUser = await response.json();
-            console.log(newUser);
-            setUser(newUser);
-        };
-        getPosts();
-        getUser();
-    }, []);
+    const { newUser: getUser, newPosts: getPosts } = await getUserPosts(id);
+
+    const user = JSON.parse(getUser);
+    const posts = JSON.parse(getPosts);
+
     return (
         <div className="font-bold ">
             <div className="h-[150px] relative">
@@ -54,12 +28,11 @@ const Profilepage = ({ params }) => {
                 <div className="bg-dark text-white">
                     <div className="flex justify-center ">
                         <div className="mt-[-40px] flex flex-col items-center">
-                            <div className="p-2 bg-white rounded-full">
+                            <div className="p-2 h-28 w-28  bg-white rounded-full relative">
                                 <Image
                                     src={user?.image}
-                                    height={90}
-                                    width={90}
-                                    className="object-contain rounded-full"
+                                    fill
+                                    className="object-cover rounded-full"
                                 />
                             </div>
                             <div className="mt-2 flex flex-col items-center w-full">

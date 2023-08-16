@@ -1,5 +1,6 @@
 "use client";
 import PostCard from "@/components/PostCard";
+import { fetchAllPosts } from "@/lib/actions";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -11,9 +12,9 @@ export default function Home() {
         setLoading(true);
         try {
             const fetchPosts = async () => {
-                const response = await fetch("/api/posts");
-                const newPosts = await response.json();
-                setPosts(posts.concat(newPosts));
+                const newPosts = await fetchAllPosts();
+
+                setPosts(JSON.parse(newPosts));
             };
             fetchPosts();
         } catch (error) {

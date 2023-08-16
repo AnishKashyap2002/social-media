@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { updateUser } from "@/lib/actions";
+import { toast } from "react-hot-toast";
 
 export const Editpage = () => {
     const { data: session } = useSession();
@@ -25,21 +27,15 @@ export const Editpage = () => {
         if (form.name && form.imageUrl) {
             try {
                 setLoading(true);
-                const response = fetch("/api/edit-user/", {
-                    method: "post",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        name: form.name,
-                        imageUrl: form.imageUrl,
-                    }),
-                });
+                const isUpdated = await updateUser(
+                    session.user._id,
+                    form.name,
+                    form.imageUrl
+                );
 
-                response.then(async (result) => {
-                    console.log(await result.json());
-                    alert("User  Updated  successfully :)");
-                });
+                if (isUpdated) {
+                    toast.success("User updated successfully");
+                }
                 setForm({
                     name: "",
                     imageUrl: "",
@@ -56,11 +52,11 @@ export const Editpage = () => {
     };
 
     return (
-        <div className="w-full py-4 flex mt-10 justify-center mb-20 ">
+        <div className="w-full h-full py-4 flex  justify-center mb-20 bg-[url('/hacker.jpg')] bg-cover bg-no-repeat bg-center">
             <form
                 action=""
                 onSubmit={handleSubmit}
-                className=" sm:min-w-[700px] w-full rounded-xl bg-light shadow-lg"
+                className="  mt-10 sm:min-w-[700px] w-full rounded-xl bg-light shadow-lg bg-opacity-70 h-fit"
             >
                 <div className="text-2xl font-bold text-center">
                     Update User
@@ -74,7 +70,7 @@ export const Editpage = () => {
                     </label>
                     <input
                         type="text"
-                        value={form.title}
+                        value={form.name}
                         onChange={(e) =>
                             setForm({ ...form, name: e.target.value })
                         }
@@ -95,7 +91,7 @@ export const Editpage = () => {
                             console.log("Files: ", res);
 
                             setForm({ ...form, imageUrl: res[0].fileUrl });
-                            alert("Upload Completed");
+                            toast.success("Image uploaded");
                         }}
                         onUploadError={(error) => {
                             // Do something with the error.
@@ -104,7 +100,7 @@ export const Editpage = () => {
                     />
 
                     {form.imageUrl && (
-                        <div className="w-full px-2 bg-light rounded-2xl flex  flex-col gap-2 justify-center">
+                        <div className="w-fit px-2 bg-light rounded-2xl flex  flex-col gap-2 justify-center">
                             <Image
                                 src={form.imageUrl}
                                 height={100}
