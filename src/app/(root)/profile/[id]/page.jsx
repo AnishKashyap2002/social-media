@@ -1,19 +1,31 @@
 import CustomPostCard from "@/components/CustomPostCard";
+import FollowerCard from "@/components/FollowerCard";
 import PostCard from "@/components/PostCard";
 import { getUserPosts } from "@/lib/actions";
+import { getCurrentUser } from "@/lib/getData";
 import Image from "next/image";
 
 const Profilepage = async ({ params }) => {
-    // const [posts, setPosts] = useState([]);
-
-    // const [user, setUser] = useState(null);
-
     const { id } = params;
+
+    const current = await JSON.parse(JSON.stringify(await getCurrentUser()));
 
     const { newUser: getUser, newPosts: getPosts } = await getUserPosts(id);
 
-    const user = JSON.parse(getUser);
-    const posts = JSON.parse(getPosts);
+    const user = await JSON.parse(getUser);
+    const posts = await JSON.parse(getPosts);
+
+    console.log(user, "this is user");
+    const checkFollower = async (user, followers) => {
+        for (let i = 0; i < followers.length; i++) {
+            if (user == followers[i]) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    const isFollower = await checkFollower(current._id, user.followers);
 
     return (
         <div className="font-bold ">
@@ -21,6 +33,7 @@ const Profilepage = async ({ params }) => {
                 <Image
                     src="/bg.jpg"
                     fill
+                    alt="this bg"
                     className="w-full h-auto  z-[-1] object-cover"
                 />
             </div>
@@ -32,11 +45,20 @@ const Profilepage = async ({ params }) => {
                                 <Image
                                     src={user?.image}
                                     fill
+                                    alt="this is again an image"
                                     className="object-cover rounded-full"
                                 />
                             </div>
                             <div className="mt-2 flex flex-col items-center w-full">
                                 <p className="font-bold text-xl">{user.name}</p>
+
+                                <FollowerCard
+                                    isFollower={isFollower}
+                                    follower_count={user.followers.length}
+                                    following_count={user.following.length}
+                                    currentUser_id={current._id}
+                                    user_id={user._id}
+                                />
                                 <p className="font-light text-xs w-full flex justify-center">
                                     <span className="font-bold">
                                         {" "}
@@ -44,6 +66,7 @@ const Profilepage = async ({ params }) => {
                                     </span>{" "}
                                     <span> &nbsp; posts</span>
                                 </p>
+                                <p>{user.bio}</p>
                             </div>
                         </div>
                     </div>
@@ -54,6 +77,7 @@ const Profilepage = async ({ params }) => {
                         {posts.map((post, index) => (
                             <CustomPostCard
                                 key={index}
+                                current={current}
                                 post={post}
                             />
                         ))}

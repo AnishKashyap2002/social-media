@@ -19,8 +19,17 @@ export const Editpage = () => {
 
     const [form, setForm] = useState({
         name: session?.user?.name || "",
+        bio: session?.user?.bio || "",
         imageUrl: session?.user?.image || "",
     });
+
+    useEffect(() => {
+        setForm({
+            name: session?.user?.name || "",
+            bio: session?.user?.bio || "",
+            imageUrl: session?.user?.image || "",
+        });
+    }, [session]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,24 +39,28 @@ export const Editpage = () => {
                 const isUpdated = await updateUser(
                     session.user._id,
                     form.name,
+                    form.bio,
                     form.imageUrl
                 );
 
                 if (isUpdated) {
                     toast.success("User updated successfully");
+                    setForm({
+                        name: "",
+                        bio: "",
+                        imageUrl: "",
+                    });
                 }
-                setForm({
-                    name: "",
-                    imageUrl: "",
-                });
-                router.push("/");
+                setTimeout(() => {
+                    router.back();
+                }, 1000);
             } catch (error) {
                 console.log("error", error);
             } finally {
                 setLoading(false);
             }
         } else {
-            alert("All fields are required !!");
+            toast.error("All fields are required !!");
         }
     };
 
@@ -73,6 +86,22 @@ export const Editpage = () => {
                         value={form.name}
                         onChange={(e) =>
                             setForm({ ...form, name: e.target.value })
+                        }
+                        className="w-full bg-dark text-white rounded-xl px-4 py-2 outline-none font-semibold shadow-sm"
+                    />
+                </div>
+                <div className="flex flex-col w-full text-black px-4 py-2 gap-1">
+                    <label
+                        htmlFor=""
+                        className=""
+                    >
+                        Enter Bio
+                    </label>
+                    <textarea
+                        rows={4}
+                        value={form.bio}
+                        onChange={(e) =>
+                            setForm({ ...form, bio: e.target.value })
                         }
                         className="w-full bg-dark text-white rounded-xl px-4 py-2 outline-none font-semibold shadow-sm"
                     />

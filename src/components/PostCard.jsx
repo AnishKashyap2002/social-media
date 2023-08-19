@@ -1,11 +1,17 @@
+import { userLikedPost } from "@/lib/actions";
 import Image from "next/image";
 import Link from "next/link";
+import PostFooter from "./PostFooter";
 
-const PostCard = ({ post }) => {
-    const { image, title, user, createdAt } = post;
+const PostCard = async ({ post, currentUser_id }) => {
+    const { image, title, user, createdAt, comments, likes, _id: id } = post;
+
     const { name, image: userImage, _id } = user;
+
+    const liked = await userLikedPost(currentUser_id, id);
+
     return (
-        <div className="px-4 py-3 bg-dark text-white w-full flex flex-col rounded-xl shadow-lg">
+        <div className="px-4 py-3 bg-dark text-white w-full flex flex-col rounded-xl shadow-lg h-full">
             <div className="flex gap-5 flex-1 ">
                 <Link href={`/profile/${_id}`}>
                     <div className="flex flex-col h-full items-center">
@@ -37,6 +43,13 @@ const PostCard = ({ post }) => {
                             rounded-2xl"
                         />
                     </div>
+                    <PostFooter
+                        likes={likes}
+                        id={id}
+                        currentUser_id={currentUser_id}
+                        comments={comments}
+                        liked={liked}
+                    />
                 </div>
             </div>
         </div>
