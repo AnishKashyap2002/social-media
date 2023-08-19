@@ -12,7 +12,7 @@ const Page = async ({ params }) => {
         JSON.stringify(await getCurrentUser())
     );
 
-    const post = JSON.parse(await getPost(id));
+    const post = await JSON.parse(await getPost(id));
 
     return (
         <div className="flex flex-col items-center gap-2 h-screen relative w-full">
