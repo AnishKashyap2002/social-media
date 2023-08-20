@@ -15,7 +15,7 @@ const Page = async ({ params }) => {
     const post = await JSON.parse(await getPost(id));
 
     return (
-        <div className="flex flex-col items-center gap-2 h-screen relative w-full">
+        <div className="flex flex-col items-center gap-2  relative w-full mb-20">
             <div className="  flex flex-col items-center gap-4">
                 <div className="h-fit  origin-top flex justify-center flex-col ">
                     <PostCard
